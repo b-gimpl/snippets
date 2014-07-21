@@ -12,25 +12,30 @@ $("[data-append],[data-replace],[data-after],[data-before]").extendAjaxInclude()
 ```
 The HTML element:
 ```html
-<div data-scrolloffset="500" data-storage="12-asd" data-replace="index.html">Hello, world!</div>
+<div data-scrolloffset="500" data-ttl="80000" data-storage="12-asd" data-replace="index.html">Hello, world!</div>
 ```
+If you use the __data-ttl__ attribute, you need all attributes in the reloaded container again!
 
 ###Options:
 ```js
-$("selector").extendAjaxInclude(function(){
-  alert('callback');
-});
-```
-```js
 $("selector").extendAjaxInclude({
   defaultOffset: 500, //changes the default offset..
-  callback: function(){
-    alert('callback');
-  }
+  ttl: 60000 // 1 minute interval = default interval
 });
 ```
+__Callback:__
+Same as default ajaxInclude!
+After Session Storage include the event "ajaxInclude" would triggered on this element.
 
 ###Attributes:
+
+---
+__data-ttl="80000"__
+
+Default value is __60000__ = __1 minute__
+After 80 sec. would the element reloaded.
+__Attention:__
+You "need" the __data-storage__ for ttl!
 
 ---
 
