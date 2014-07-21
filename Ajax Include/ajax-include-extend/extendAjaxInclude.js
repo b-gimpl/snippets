@@ -69,10 +69,20 @@
 							_this.callAjaxInclude( _self );
 						}
 					}else{
-						_self[ _method ]( sessionStorage.getItem(_self.data('storage') ) );
-                        if( typeof _this.options.callback === 'function' ){
-                            _this.options.callback();
-                        }
+						var content = sessionStorage.getItem(_self.data('storage') );
+
+			                        if( _method === 'replaceWith' ) {
+			                            _self['after']( content );
+			                            _self.trigger( "ajaxInclude", [ content ] );
+			                            _self.remove();
+			                        } else {
+			                            _self[ _method ]( content );
+			                            _self.trigger( "ajaxInclude", [ content ] );
+			                        }
+			
+			                        if( typeof _this.options.callback === 'function' ){
+			                            _this.options.callback();
+			                        }
 					}
 				}
 			});
