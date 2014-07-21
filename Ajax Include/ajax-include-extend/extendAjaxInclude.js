@@ -1,5 +1,5 @@
 /**
- * ExtendAjaxInclude v. 0.1.0
+ * ExtendAjaxInclude v. 0.2.0
  * Dependencies: ajaxInclude()
  * © 2014 - Gerhard Kanzler (elements.at)
  **/
@@ -8,21 +8,19 @@
 	var pluginName = "extendAjaxInclude",
 		defaults = {
 			defaultOffset: 500,
-			callback : null
+			ttl : 60000
 		};
 
 	function ExtendAjaxInclude( element, options ) {
 		this.element = element;
-		if( typeof options == 'function' ){
-		  defaults.callback = options;
-        }
 		this.options = $.extend( {}, defaults, options) ;
 
 		this._defaults = defaults;
 		this._name = pluginName;
+		
+		window.ttl = new Array();
 		this.scrollHandle = [];
 		this.innerHeight = $(window).innerHeight();
-		
 
 		this.init();
 	}
@@ -34,6 +32,22 @@
 			$(window).on('resize', function(){
 				_self.innerHeight = $(window).innerHeight();
 			});
+			
+			// Add default Timeout
+			if( tpeof window.ttlHandle != 'undefined' ){
+				window.ttlHandle = setInterval(function(){
+					var i = 0,
+						inLen = window.ttl.length;
+						nowTime = new Date();
+					for( i; i < inLen; i++ ){
+						if( window.ttl[i][0] <= nowTime.getTime() ){
+							_self.ajaxInclude( window.ttl[i][1] );
+							window.ttl.splice(i, 1);
+						}
+					}
+				}, this.options.ttl);
+            }
+            
 			// Listen to Scroll event
 			$(window).on('scroll', function(){
 				if( _self.scrollHandle.length ){
@@ -44,9 +58,13 @@
 		},
 
 		// AjaxInclude
-		ajaxInclude  : function(){
+		ajaxInclude  : function( _obj ){
+			var el = $(this.element);
+            if( typeof _obj != 'undefined' ){
+                el = $('[data-storage="' + $(_obj[0]).data('storage') + '"]');
+            }
 			var _this = this;
-			$(this.element).each(function(){
+			el.each(function(){
 				var _self = $(this),
 					_methods = [ "append", "replace", "before", "after" ],
 					_method;
@@ -58,6 +76,16 @@
 						}
 					}
 				}
+				
+                if( _self.is('[data-ttl]') ){
+                    var ttl = _self.data('ttl');
+                    
+                    var myTime = new Date();
+                    myTime = myTime.getTime() + ttl;
+                    
+                    window.ttl.push( [myTime, _self] );
+                }
+                
 				if( window.sessionStorage ){
 					if( !sessionStorage.getItem(_self.data('storage')) ){
 						if( _self.is('[data-scrolloffset]') ){
@@ -71,18 +99,14 @@
 					}else{
 						var content = sessionStorage.getItem(_self.data('storage') );
 
-			                        if( _method === 'replaceWith' ) {
-			                            _self['after']( content );
-			                            _self.trigger( "ajaxInclude", [ content ] );
-			                            _self.remove();
-			                        } else {
-			                            _self[ _method ]( content );
-			                            _self.trigger( "ajaxInclude", [ content ] );
-			                        }
-			
-			                        if( typeof _this.options.callback === 'function' ){
-			                            _this.options.callback();
-			                        }
+                        if( _method === 'replaceWith' ) {
+                            _self['after']( content );
+                            _self.trigger( "ajaxInclude", [ content ] );
+                            _self.remove();
+                        } else {
+                            _self[ _method ]( content );
+                            _self.trigger( "ajaxInclude", [ content ] );
+                        }
 					}
 				}
 			});
@@ -110,9 +134,6 @@
 				try{
                     if( _self.is('[data-storage]') ){
 					    sessionStorage.setItem( _self.data('storage'), content );
-                    }
-					if( typeof _this.options.callback === 'function' ){
-                        _this.options.callback();
                     }
 				}catch( e ){
 					sessionStorage.clear();
