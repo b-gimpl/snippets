@@ -1,0 +1,1 @@
+<?= $this->paginationControl($this->objList, "Sliding", "include/paging.php") ?>

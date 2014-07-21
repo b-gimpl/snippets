@@ -1,0 +1,6 @@
+[submodule "Detectmobile"]
+	path = Detectmobile
+	url = https://github.com/Gerhard-Kanzler/detectmobile.js
+[submodule "DetectMobile"]
+	path = DetectMobile
+	url = https://github.com/Gerhard-Kanzler/detectmobile.js.git

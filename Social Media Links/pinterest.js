@@ -1,0 +1,3 @@
+// Please define a language Variable like this: var lang = 'en';
+$('#socialmedia').append('<div><a href="//' + lang + '.pinterest.com/pin/create/button/?url=' + window.location.href + '" data-pin-do="buttonPin" data-pin-config="none"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_gray_20.png" /></a></div>');
+$('head').append('<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>');
