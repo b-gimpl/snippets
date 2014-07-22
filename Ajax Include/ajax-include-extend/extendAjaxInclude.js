@@ -34,19 +34,18 @@
 			});
 			
 			// Add default Timeout
-			if( tpeof window.ttlHandle != 'undefined' ){
-				window.ttlHandle = setInterval(function(){
-					var i = 0,
-						inLen = window.ttl.length;
-						nowTime = new Date();
-					for( i; i < inLen; i++ ){
-						if( window.ttl[i][0] <= nowTime.getTime() ){
-							_self.ajaxInclude( window.ttl[i][1] );
-							window.ttl.splice(i, 1);
-						}
+			
+			window.ttlHandle = setInterval(function(){
+				var i = 0,
+					inLen = window.ttl.length;
+					nowTime = new Date();
+				for( i; i < inLen; i++ ){
+					if( window.ttl[i][0] <= nowTime.getTime() ){
+						_self.ajaxInclude( window.ttl[i][1] );
+						window.ttl.splice(i, 1);
 					}
-				}, this.options.ttl);
-            }
+				}
+			}, this.options.ttl);
             
 			// Listen to Scroll event
 			$(window).on('scroll', function(){
