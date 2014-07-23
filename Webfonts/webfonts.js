@@ -58,28 +58,22 @@
                 injectRawStyle(sessionStorage.font_css_cache);
                 // otherwise, load it with ajax
             } else {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", css_href, true);
-                on(xhr, 'load', function () {
-                    if ( xhr.readyState === 4 ) {
-                        // once we have the content, quickly inject the css rules
-                        injectRawStyle(xhr.responseText);
-                        // and cache the text content for further use
-                        // notice that this overwrites anything that might have already been previously cached
-                        sessionStorage.font_css_cache = xhr.responseText;
-                        sessionStorage.font_css_cache_file = css_href;
-                    }
+                $.ajax( css_href ).done(function(responseText) {
+                    // once we have the content, quickly inject the css rules
+                    injectRawStyle(responseText);
+                    // and cache the text content for further use
+                    // notice that this overwrites anything that might have already been previously cached
+                    sessionStorage.font_css_cache = responseText;
+                    sessionStorage.font_css_cache_file = css_href;
                 });
-                xhr.send();
             }
         }
     }
 
     // this is the simple utitily that injects the cached or loaded css text
     function injectRawStyle(text) {
-        var style = document.createElement('style');
-        style.innerHTML = text;
-        document.getElementsByTagName('head')[0].appendChild(style);
+        var style = $(['<style>', text,'</style>'].join(''));
+        document.getElementsByTagName('head')[0].appendChild(style[0]);
     }
 
 }());
