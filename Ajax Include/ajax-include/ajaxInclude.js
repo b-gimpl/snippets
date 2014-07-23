@@ -132,7 +132,9 @@
             if ( isHijax ) {
                 AI.makeReq( url, el, true );
             }
-            else if ( !media || ( win.matchMedia && win.matchMedia( media ).matches ) ) {
+            else if ( !media
+                || ( win.matchMedia && win.matchMedia( media ).matches )
+                || (el.data( "fallback" ) !== undefined && !win.matchMedia('(min-width: 0px)').matches)) {
                 queueOrRequest( el );
             }
             else if( media && win.matchMedia ){
