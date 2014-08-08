@@ -4,6 +4,10 @@ JsConfig
 This Script Creates a simple js Object for config or something.
 
 ###Use:
+Copy File to:
+```
+/website/lib/Website/View/Helper/JsConfig.php
+```
 Layout File:
 ```php
 <?= $this->jsConfig('NAME_OF_OBJECT') ?>
