@@ -26,6 +26,11 @@ Im Head wird das ganze aufgerufen
     } 
 ?>
 ```
+## Einbindung in der Area WYSIWYG ##
+```
+<?= $this->elementsHeadMeta()->setDescription($this->wysiwyg("content")->getData()) ?>
+```
+
 ## Logik zur Generierung der Metadescription ##
 * ist die Description im headMeta()-View-Helper schon anderweitig gesetzt worden (kann dem elementsHeadMeta()-Helper per setMetaDescriptionIsSet() mitgeteilt werden) ? Ja => gib headMeta() aus, nein => weiter zu punkt 2
 * am Dokument Description gesetzt? ja => verwende diesen, nein => weiter zu 2.
