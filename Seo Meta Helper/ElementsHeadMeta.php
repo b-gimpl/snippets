@@ -4,6 +4,8 @@ class Website_View_Helper_ElementsHeadMeta extends Zend_View_Helper_Placeholder_
 {
     private $built;
 
+    protected $description;
+
     public function elementsHeadMeta()
     {
         return $this;
@@ -56,7 +58,7 @@ class Website_View_Helper_ElementsHeadMeta extends Zend_View_Helper_Placeholder_
         }
         return (string)$this->view->headMeta();
     }
-    
+
         public function setFirstContent($content)
     {
         if (!$this->metaDescriptionFromContent && $content) {
@@ -64,6 +66,12 @@ class Website_View_Helper_ElementsHeadMeta extends Zend_View_Helper_Placeholder_
         }
 
     }
+
+	public function setDescription($description) {
+		if(!$this->description) {
+			$this->description = $description;
+		}
+	}
 
 
     private function setHeadMeta()
@@ -90,8 +98,7 @@ class Website_View_Helper_ElementsHeadMeta extends Zend_View_Helper_Placeholder_
             $this->view->set_metadescription = false;
         }
 
-
-        if ($this->view->set_metadescription) {
+        if ($this->description && $this->view->set_metadescription) {
 
             foreach ($this->view->document->getElements() as $e) {
                 if ($e instanceof Document_Tag_Wysiwyg) {
@@ -101,6 +108,8 @@ class Website_View_Helper_ElementsHeadMeta extends Zend_View_Helper_Placeholder_
                     }
                 }
             }
+        } else if($this->description) {
+        	$metadescription = $this->description;
         }
 
         $this->view->headMeta()->appendName('description', $this->getMetaDescription($metadescription, $desclength));
