@@ -2,10 +2,70 @@
 
 class Website_View_Helper_ElementsHeadTitle extends Zend_View_Helper_Placeholder_Container_Standalone
 {
+    private $built;
 
+    protected $title;
 
     public function elementsHeadTitle()
     {
+        return $this;
+    }
+
+
+    public function resetMeta()
+    {
+        $this->built = false;
+    }
+
+    /**
+     * set's property "built" to true,
+     * use this method if metaTitle is set in headTitle before
+     * (e.g. deskline)
+     */
+    public function setMetaTitleIsSet()
+    {
+        $this->built = true;
+
+    }
+
+    private function getSmartTitle($headTitle, $length)
+    {
+        $smarttitle = strip_tags(htmlspecialchars_decode($headTitle));
+        return $this->cutStringRespectingWhitespace($smarttitle, $length);
+    }
+
+    private function cutStringRespectingWhitespace($string, $length)
+    {
+        if ($length < strlen($string)) {
+            $text = substr($string, 0, $length);
+            if (false !== ($length = strrpos($text, ' '))) {
+                $text = substr($text, 0, $length);
+            }
+            $string = $text;
+        }
+
+        return $string;
+    }
+
+    public function toString()
+    {
+        if (!$this->built) {
+            $this->setHeadTitle();
+        }
+        return (string)$this->view->headTitle();
+    }
+
+    public function setTitle($title)
+    {
+        if (!$this->title) {
+            $this->title = $title;
+        }
+    }
+
+    private function setHeadTitle()
+    {
+        $this->view->set_metatitle = true;
+
         $crop = false;
         $this->view->set_metatitle = true;
 
@@ -16,13 +76,17 @@ class Website_View_Helper_ElementsHeadTitle extends Zend_View_Helper_Placeholder
                 $this->view->set_metatitle = false;
             }
         }
-		
-		$headline = "";
+
+        $headline = "";
         if($this->view->document) {
             $headlineElement = $this->view->document->getElement("headline");
             if($headlineElement instanceof Document_Tag_Textarea || $headlineElement instanceof Document_Tag_Input) {
                 $headline = $headlineElement->getData();
             }
+        }
+
+        if ($this->title) {
+            $headline = $this->title;
         }
 
 
@@ -44,9 +108,7 @@ class Website_View_Helper_ElementsHeadTitle extends Zend_View_Helper_Placeholder
         if ($this->view->set_metatitle) {
             if ($headline) {
                 if ($crop) {
-                    $this->view->headTitle($this->getSmartTitle($headline . ' ' . $this->view->getProperty('seo_separator') . ' ' . $this->view->getProperty('seo_suffix')
-	
-, $crop));
+                    $this->view->headTitle($this->getSmartTitle($headline . ' ' . $this->view->getProperty('seo_separator') . ' ' . $this->view->getProperty('seo_suffix'), $crop));
                 }
                 else {
                     $this->view->headTitle($headline);
@@ -97,30 +159,7 @@ class Website_View_Helper_ElementsHeadTitle extends Zend_View_Helper_Placeholder
             $this->view->metaTitleSet = true; //set to true to avoid duplicate meta titles in case elementsHeadMeta() is called twice
         }
 
-        return $this;
+        $this->built = true;
     }
 
-    private function getSmartTitle($headTitle, $length)
-    {
-        $smarttitle = strip_tags(htmlspecialchars_decode($headTitle));
-        return $this->cutStringRespectingWhitespace($smarttitle, $length);
-    }
-
-    private function cutStringRespectingWhitespace($string, $length)
-    {
-        if ($length < strlen($string)) {
-            $text = substr($string, 0, $length);
-            if (false !== ($length = strrpos($text, ' '))) {
-                $text = substr($text, 0, $length);
-            }
-            $string = $text;
-        }
-
-        return $string;
-    }
-
-    public function toString()
-    {
-        return (string)$this->view->headTitle();
-    }
 }
