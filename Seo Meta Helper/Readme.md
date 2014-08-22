@@ -28,6 +28,7 @@ Im Head wird das ganze aufgerufen
 ```
 ## Einbindung in der Area WYSIWYG ##
 ```
+<?= $this->elementsHeadTitle()->setTitle($this->input("headline")->getData()); ?>
 <?= $this->elementsHeadMeta()->setDescription($this->wysiwyg("content")->getData()) ?>
 ```
 
