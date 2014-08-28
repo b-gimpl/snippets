@@ -10,7 +10,9 @@ path: /includes/paging.php
 	<div class="col-xs-8 text-right">
 		<ul class="pagination">
  
-		<?php if (isset($this->previous)){ ?>
+		<?php if (isset($this->previous)){
+			$this->placeholder('headPrev')->set('<link rel="prev" href="' . $this->url(array('page' => $this->previous)) . '">');
+		?>
 		    <li><a href="<?= $this->url(array('page' => $this->previous)); ?>" rel="prev"><span class="icon-arrow-left"></span></a></li>
 		<?php } else { ?>
 		    <li class="disabled"><a href="#"><span class="icon-arrow-left"></span></a></li>
@@ -24,7 +26,9 @@ path: /includes/paging.php
 		    <?php } ?>
 		<?php } ?>
  
-		<?php if (isset($this->next)){ ?>
+		<?php if (isset($this->next)){ 
+			$this->placeholder('headNext')->set('<link rel="next" href="' . $this->url(array('page' => $this->next)) . '">');
+		?>
 		    <li><a href="<?= $this->url(array('page' => $this->next)); ?>" rel="next"><span class="icon-arrow-right"></span></a></li>
 		<?php } else{ ?>
 		    <li class="disabled"><a href="#"><span class="icon-arrow-right"></span></a></li>
